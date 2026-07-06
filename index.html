@@ -268,13 +268,36 @@
   .cta p{font-size:14px;line-height:2;margin:0 auto 24px;max-width:30em;color:#FFF3E8}
   .cta-btn{
     display:inline-block;background:#FFF;color:var(--accent-deep);
-    font-family:var(--serif);font-size:16.5px;letter-spacing:.12em;font-weight:600;
-    border-radius:999px;padding:16px 38px;text-decoration:none;
+    font-family:var(--serif);font-size:16px;letter-spacing:.1em;font-weight:600;
+    border-radius:999px;padding:15px 30px;text-decoration:none;
     box-shadow:0 10px 26px rgba(0,0,0,.25);
     transition:transform .15s ease,box-shadow .15s ease;
   }
   .cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.3)}
   .cta .sub{display:block;font-size:11.5px;letter-spacing:.14em;color:#FFE4CC;margin-top:14px}
+
+  .cta-flow{display:flex;flex-direction:column;gap:14px;max-width:440px;margin:0 auto}
+  .cta-step{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);
+    border-radius:10px;padding:20px 16px;
+  }
+  .step-num{
+    display:block;font-size:11px;letter-spacing:.3em;color:#FFE4CC;
+    font-weight:700;margin-bottom:12px;
+  }
+  .code-row{
+    font-size:11.5px;color:#FFE9D6;margin:14px 0 0;line-height:2.1;
+  }
+  .code-row strong{
+    display:inline-block;background:rgba(0,0,0,.22);padding:2px 10px;
+    border-radius:4px;letter-spacing:.04em;font-weight:600;color:#FFF;
+  }
+  .code-row button{
+    font-family:var(--sans);font-size:11px;border:1px solid rgba(255,255,255,.55);
+    background:none;color:#FFF;border-radius:999px;padding:3px 12px;
+    cursor:pointer;margin-left:6px;
+  }
+  .code-row button:hover{background:rgba(255,255,255,.15)}
 
   /* ---------- redo ---------- */
   .after{margin-top:30px;text-align:center}
@@ -345,7 +368,8 @@
 
 <script>
 /* ================= 設定 ================= */
-const LINE_URL = 'https://lin.ee/OcqMX0L';
+const LINE_URL = 'https://lin.ee/OcqMX0L';      // 友だち追加リンク
+const LINE_OA_ID = '@110goscl';                  // LINE公式アカウントID（結果送信ボタン用）
 
 /* ================= 9つの気質（数秘） ================= */
 const TYPES = {
@@ -673,8 +697,18 @@ function render(){
     <div class="cta">
       <p class="eyebrow">この距離を縮める、最初の一歩に</p>
       <h2>2026年最新！<br>無料で学べる<br>AI✕コンテンツビジネスの始め方</h2>
-      <p>「${fullName}」のあなたに合った稼ぎ方・発信の始め方も、LINEで無料でお伝えしています。この診断結果を持って、気軽に受け取ってください。</p>
-      <a class="cta-btn" id="ctaBtn" target="_blank" rel="noopener">LINEで無料で受け取る</a>
+      <p>「${fullName}」のあなたに合わせた特典と、AI✕コンテンツビジネスの始め方を無料でお届けします。受け取りはかんたん、2ステップです。</p>
+      <div class="cta-flow">
+        <div class="cta-step">
+          <span class="step-num">STEP 1</span>
+          <a class="cta-btn" id="ctaBtn" target="_blank" rel="noopener">LINEで友だち追加する</a>
+        </div>
+        <div class="cta-step">
+          <span class="step-num">STEP 2</span>
+          <a class="cta-btn" id="sendTypeBtn" target="_blank" rel="noopener">診断結果を送って特典を受け取る</a>
+          <p class="code-row">ボタンでうまく送れないときは、コード<br><strong id="typeCode"></strong><button type="button" id="codeCopy">コピー</button><br>をLINEのトークに貼り付けて送ってください。</p>
+        </div>
+      </div>
       <span class="sub">登録はワンタップ・いつでも解除できます</span>
     </div>
 
@@ -683,7 +717,17 @@ function render(){
     </div>
   </div>`;
 
+  const typeCode = `才能タイプ：${fullName}`;
   $('ctaBtn').href = LINE_URL;
+  $('sendTypeBtn').href = 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_OA_ID) + '/?' + encodeURIComponent(typeCode);
+  $('typeCode').textContent = typeCode;
+  $('codeCopy').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(typeCode);
+      $('codeCopy').textContent = 'コピーしました';
+      setTimeout(() => { $('codeCopy').textContent = 'コピー'; }, 1800);
+    }catch(e){ $('codeCopy').textContent = '長押しでコピーしてください'; }
+  });
 
   $('redoBtn').addEventListener('click', () => {
     $('result').classList.remove('show');
