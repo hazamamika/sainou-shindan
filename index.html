@@ -368,8 +368,7 @@
 
 <script>
 /* ================= 設定 ================= */
-const LINE_URL = 'https://lin.ee/OcqMX0L';      // 友だち追加リンク
-const LINE_OA_ID = '@110goscl';                  // LINE公式アカウントID（結果送信ボタン用）
+const LINE_URL = 'https://lin.ee/OcqMX0L'; // 友だち追加リンク（STEP1・STEP2共通）
 
 /* ================= 9つの気質（数秘） ================= */
 const TYPES = {
@@ -706,7 +705,7 @@ function render(){
         <div class="cta-step">
           <span class="step-num">STEP 2</span>
           <a class="cta-btn" id="sendTypeBtn" target="_blank" rel="noopener">診断結果を送って特典を受け取る</a>
-          <p class="code-row">ボタンでうまく送れないときは、コード<br><strong id="typeCode"></strong><button type="button" id="codeCopy">コピー</button><br>をLINEのトークに貼り付けて送ってください。</p>
+          <p class="code-row">ボタンを押すと、あなたの結果コード<br><strong id="typeCode"></strong><button type="button" id="codeCopy">コピー</button><br>が自動でコピーされます。LINEのトークに貼り付けて送ってください。</p>
         </div>
       </div>
       <span class="sub">登録はワンタップ・いつでも解除できます</span>
@@ -719,7 +718,10 @@ function render(){
 
   const typeCode = `才能タイプ：${fullName}`;
   $('ctaBtn').href = LINE_URL;
-  $('sendTypeBtn').href = 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_OA_ID) + '/?' + encodeURIComponent(typeCode);
+  $('sendTypeBtn').href = LINE_URL;
+  $('sendTypeBtn').addEventListener('click', () => {
+    try{ navigator.clipboard.writeText(typeCode); }catch(e){}
+  });
   $('typeCode').textContent = typeCode;
   $('codeCopy').addEventListener('click', async () => {
     try{
